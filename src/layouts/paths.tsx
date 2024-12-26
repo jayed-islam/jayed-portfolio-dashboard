@@ -14,4 +14,7 @@ export const paths = {
   skill: {
     root: "/skill",
   },
+  experience: {
+    root: "/experience",
+  },
 };

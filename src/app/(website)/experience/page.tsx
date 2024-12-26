@@ -1,7 +1,8 @@
+import ExperienceListView from "@/sections/experience/view/experience-list-view";
 import React from "react";
 
 const Page = () => {
-  return <div>Page</div>;
+  return <ExperienceListView />;
 };
 
 export default Page;
