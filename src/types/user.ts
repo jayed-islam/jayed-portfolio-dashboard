@@ -1,5 +1,3 @@
-import { IVendor } from "./vendor";
-
 export const USER_ROLE = {
   customer: "customer",
   admin: "admin",
@@ -20,7 +18,6 @@ export interface IUser {
   status: "active" | "suspended" | "blocked";
   isDeleted: boolean;
   followedVendors: string[];
-  vendor: IVendor;
 }
 
 export interface IGetUpdateUSERProfileResponse {
