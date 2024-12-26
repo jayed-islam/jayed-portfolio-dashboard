@@ -28,7 +28,7 @@ import {
 } from "@/validations/projects";
 import { BooleanState } from "@/types/utils";
 import RHFDatePicker from "@/components/hook-form/rhf-date-picker";
-import { useUpdateProjectMutation } from "@/redux/reducers/product/projectApi";
+import { useUpdateProjectMutation } from "@/redux/reducers/project/projectApi";
 
 const StyledAutocompletePaper = styled("div")(({ theme }) => ({
   border: "1px solid #ccc",

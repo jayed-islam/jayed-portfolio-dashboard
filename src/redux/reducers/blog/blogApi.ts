@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { api } from "@/redux/api";
 import { IBlog } from "@/types/blog";
-import { IPagination } from "@/types/product";
+import { IPagination } from "@/types/projects";
 
 export type IBlogListFilterOptions = {
   searchTerm: string;

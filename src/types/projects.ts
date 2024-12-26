@@ -14,3 +14,10 @@ export interface IProject {
   endDate: Date;
   isPublished: boolean;
 }
+
+export type IPagination = {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  itemsPerPage: number;
+};

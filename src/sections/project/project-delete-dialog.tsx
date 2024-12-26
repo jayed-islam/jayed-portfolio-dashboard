@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import toast from "react-hot-toast";
-import { useSoftDeleteProjectMutation } from "@/redux/reducers/product/projectApi";
+import { useSoftDeleteProjectMutation } from "@/redux/reducers/project/projectApi";
 interface SoftDeleteDialogProps {
   open: boolean;
   onClose: () => void;

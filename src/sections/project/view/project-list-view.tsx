@@ -18,7 +18,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { FilterList } from "@mui/icons-material";
-import { useGetProjectListQuery } from "@/redux/reducers/product/projectApi";
+import { useGetAllProjectsQuery } from "@/redux/reducers/project/projectApi";
 import ProjectRow from "../project-row";
 
 const TableShimmer = () => {
@@ -51,13 +51,13 @@ const TableShimmer = () => {
   );
 };
 
-const AdminAllProjectsListView = () => {
+const ProectListView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
 
-  const { data, isFetching } = useGetProjectListQuery({
+  const { data, isFetching } = useGetAllProjectsQuery({
     searchTerm,
     limit,
     page: page + 1,
@@ -161,4 +161,4 @@ const AdminAllProjectsListView = () => {
   );
 };
 
-export default AdminAllProjectsListView;
+export default ProectListView;

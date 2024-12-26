@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { api } from "@/redux/api";
-import { IPagination } from "@/types/product";
-import { IProject } from "@/types/projects";
+import { IPagination, IProject } from "@/types/projects";
 
 export type IProjectFilterOptions = {
   page?: number;
@@ -95,4 +94,5 @@ export const {
   useSoftDeleteProjectMutation,
   useDuplicateProjectMutation,
   useGetSingleProjectQuery,
+  useGetAllProjectsQuery,
 } = projectApi;

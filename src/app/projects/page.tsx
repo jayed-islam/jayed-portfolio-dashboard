@@ -1,8 +1,8 @@
-import AdminAllProductListView from "@/sections/admin/admin-product-list";
+import ProectListView from "@/sections/project/view/project-list-view";
 import React from "react";
 
 const Page = () => {
-  return <AdminAllProductListView />;
+  return <ProectListView />;
 };
 
 export default Page;
