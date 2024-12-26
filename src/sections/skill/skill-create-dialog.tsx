@@ -19,16 +19,24 @@ import { LoadingButton } from "@mui/lab";
 import RHFTextField from "@/components/hook-form/rhf-text-field";
 import FormProvider from "@/components/hook-form/form-provider";
 import RHFCheckbox from "@/components/hook-form/rhf-checkbox";
-import { commonTechnologies } from "@/constants";
+import { IProject } from "@/types/projects";
+import { commonTechnologies, levelOptions, statusOptions } from "@/constants";
+import RHFSelect from "@/components/hook-form/rhf-select-input";
+import {
+  createProjectValidationSchema,
+  updateProjectValidationSchema,
+} from "@/validations/projects";
 import { BooleanState } from "@/types/utils";
-import { useCreateBlogMutation } from "@/redux/reducers/blog/blogApi";
+import RHFDatePicker from "@/components/hook-form/rhf-date-picker";
+import {
+  useCreateProjectMutation,
+  useUpdateProjectMutation,
+} from "@/redux/reducers/project/projectApi";
 import { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { createBlogValidationSchema } from "@/validations/blog";
-import { useAppSelector } from "@/redux/hooks";
 import { ImageAspectRatio } from "@mui/icons-material";
 import Image from "next/image";
+import { createSkillValidationSchema } from "@/validations/skill";
+import { useCreateSkillMutation } from "@/redux/reducers/skill/skillApi";
 
 const StyledAutocompletePaper = styled("div")(({ theme }) => ({
   border: "1px solid #ccc",
@@ -42,23 +50,26 @@ interface Props {
   dialog: BooleanState;
 }
 
-export const BlogCreateDialog = ({ dialog }: Props) => {
-  const { user } = useAppSelector((state) => state.auth);
-  const [value, setValue] = useState("");
+export const CreateSkillDialog = ({ dialog }: Props) => {
   const [images, setImages] = useState<File[]>([]);
   const methods = useForm({
-    resolver: zodResolver(createBlogValidationSchema),
+    resolver: zodResolver(createSkillValidationSchema),
   });
 
-  const [createBlog, { isLoading }] = useCreateBlogMutation();
+  const [createSkill, { isLoading }] = useCreateSkillMutation();
 
   const {
     handleSubmit,
     reset,
     watch,
     control,
-    formState: { dirtyFields },
+    formState: { dirtyFields, errors },
   } = methods;
+
+  // Remove the selected image
+  const handleRemoveImage = () => {
+    setImages([]);
+  };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // Select only the first file
@@ -73,46 +84,31 @@ export const BlogCreateDialog = ({ dialog }: Props) => {
     }
   };
 
-  // Remove the selected image
-  const handleRemoveImage = () => {
-    setImages([]); // Clear the images array
-  };
-
   const onSubmit = handleSubmit(async (data) => {
-    if (!value.trim()) {
-      toast.error("Content cannot be empty!");
-      return;
-    }
-
     if (images.length === 0) {
       toast.error("Please add minimum 1 image");
       return;
     }
 
-    const payload = {
-      ...data,
-      content: value,
-      author: user?._id as string,
-    };
-
     const formData = new FormData();
-    formData.append("data", JSON.stringify(payload));
+    formData.append("data", JSON.stringify(data));
     formData.append("file", images[0]);
 
     try {
-      const response = await createBlog(formData).unwrap();
+      const response = await createSkill(formData).unwrap();
       if (response.success) {
         toast.success(response.message);
         setImages([]);
-        setValue("");
         dialog.setFalse();
       } else {
         toast.error(response.message);
       }
     } catch (error: any) {
-      toast.error("Failed to update project");
+      toast.error("Failed to create project");
     }
   });
+
+  console.log("err", errors);
 
   return (
     <Dialog
@@ -123,7 +119,7 @@ export const BlogCreateDialog = ({ dialog }: Props) => {
     >
       <div className="p-5 lg:p-11">
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
-          Create Blog
+          Create Skill
         </Typography>
         <FormProvider methods={methods} onSubmit={onSubmit}>
           <div className="flex flex-col gap-5">
@@ -162,62 +158,20 @@ export const BlogCreateDialog = ({ dialog }: Props) => {
                 </div>
               ))}
             </div>
-            <RHFTextField name="title" label="Project Title" />
+
+            <RHFTextField name="name" label="Name" />
             <RHFTextField
               name="description"
               label="Description"
               multiline
-              rows={4}
+              rows={3}
             />
 
-            <Controller
-              name="tags"
-              control={control}
-              render={({ field, formState: { errors } }) => (
-                <Autocomplete
-                  multiple
-                  freeSolo
-                  options={commonTechnologies.map((option) => option.label)}
-                  value={field.value}
-                  onChange={(e, newValue) => field.onChange(newValue)}
-                  renderTags={(value: readonly string[], getTagProps) =>
-                    value.map((option: string, index: number) => {
-                      const { key, ...tagProps } = getTagProps({ index });
-                      return (
-                        <Chip
-                          variant="outlined"
-                          label={option}
-                          key={key}
-                          {...tagProps}
-                        />
-                      );
-                    })
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Tags"
-                      placeholder="Add tags"
-                      error={Boolean(errors.tags)}
-                    />
-                  )}
-                  PaperComponent={({ children }) => (
-                    <StyledAutocompletePaper>
-                      {children}
-                    </StyledAutocompletePaper>
-                  )}
-                />
-              )}
+            <RHFSelect
+              name="level"
+              label="Skill level"
+              options={levelOptions}
             />
-
-            <div className="h-48 lg:h-64 overflow-auto">
-              <ReactQuill
-                value={value}
-                onChange={setValue}
-                placeholder="What's on your mind?"
-                className="react-quill h-52"
-              />
-            </div>
 
             <div className="flex items-center justify-end gap-3">
               <Button variant="outlined" onClick={dialog.setFalse}>
@@ -229,7 +183,7 @@ export const BlogCreateDialog = ({ dialog }: Props) => {
                 color="primary"
                 loading={isLoading}
               >
-                Create Blog
+                Create Skill
               </LoadingButton>
             </div>
           </div>

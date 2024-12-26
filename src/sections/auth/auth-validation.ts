@@ -12,9 +12,6 @@ export const authRegisterSchema = z.object({
   password: z
     .string({ required_error: "Password is required" })
     .min(8, { message: "Password must be at least 8 characters" }),
-  role: z.enum(["customer", "vendor"], {
-    required_error: "Please select account type",
-  }),
 });
 
 export type AuthFormValues = z.infer<typeof authValidationSchema>;

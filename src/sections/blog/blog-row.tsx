@@ -5,6 +5,7 @@ import { IBlog } from "@/types/blog";
 import useBoolean from "@/hooks/use-boolean";
 import { BlogEditDialog } from "./blog-edit-dialog";
 import BlogDeleteDialog from "./blog-delete-dialog";
+import Image from "next/image";
 
 interface BlogRowProps {
   blog: IBlog;
@@ -17,11 +18,20 @@ const BlogRow: React.FC<BlogRowProps> = ({ blog }) => {
     <>
       <TableRow>
         <TableCell>{blog.title}</TableCell>
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <Image
+              src={blog.banner}
+              alt="Project image"
+              height={500}
+              width={500}
+              className="h-12 w-auto rounded-sm border p-1"
+            />
+          </div>
+        </TableCell>
         <TableCell>{blog.description}</TableCell>
-        <TableCell>{blog.author.email}</TableCell>
-        <TableCell>{blog.category}</TableCell>
         <TableCell>{blog.tags.join(", ")}</TableCell>
-        <TableCell>{blog.isPublished ? "Yes" : "No"}</TableCell>
+        {/* <TableCell>{blog.isPublished ? "Yes" : "No"}</TableCell> */}
         <TableCell>
           <IconButton color="primary" onClick={dialog.setTrue}>
             <Edit />

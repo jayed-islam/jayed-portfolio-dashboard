@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   Box,
@@ -119,8 +121,9 @@ const BlogListView = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Title</TableCell>
+                  <TableCell>Banner</TableCell>
                   <TableCell>Description</TableCell>
-                  <TableCell>Category</TableCell>
+                  <TableCell>Tags</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>

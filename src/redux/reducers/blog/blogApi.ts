@@ -29,7 +29,8 @@ export const blogApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getBlogs: builder.query<IGetAllBlogResponse, IBlogListFilterOptions>({
       query: (body) => ({
-        url: "/blogs",
+        url: "/blogs/list",
+        method: "POST",
         body,
       }),
       providesTags: ["Blogs"],
@@ -51,7 +52,7 @@ export const blogApi = api.injectEndpoints({
     >({
       query: ({ id, updates }) => ({
         url: `/blogs/${id}`,
-        method: "PATCH",
+        method: "PUT",
         body: updates,
       }),
     }),

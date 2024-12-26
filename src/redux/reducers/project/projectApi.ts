@@ -40,7 +40,7 @@ export const projectApi = api.injectEndpoints({
       IProjectFilterOptions
     >({
       query: (options) => ({
-        url: `/project`,
+        url: `/project/list`,
         method: "POST",
         body: options,
       }),

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useState } from "react";
@@ -18,10 +17,10 @@ import {
   Skeleton,
 } from "@mui/material";
 import { FilterList } from "@mui/icons-material";
-import { useGetAllProjectsQuery } from "@/redux/reducers/project/projectApi";
-import ProjectRow from "../project-row";
 import useBoolean from "@/hooks/use-boolean";
-import { CreateProjectDialog } from "../project-create-dialog";
+import SkillRow from "../skill-row";
+import { useGetSkillsQuery } from "@/redux/reducers/skill/skillApi";
+import { CreateSkillDialog } from "../skill-create-dialog";
 
 const TableShimmer = () => {
   const rows = 5;
@@ -53,13 +52,13 @@ const TableShimmer = () => {
   );
 };
 
-const ProectListView = () => {
+const SkillListView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
 
-  const { data, isFetching } = useGetAllProjectsQuery({
+  const { data, isFetching } = useGetSkillsQuery({
     searchTerm,
     limit,
     page: page + 1,
@@ -86,9 +85,9 @@ const ProectListView = () => {
     <Box>
       <div className="flex items-center justify-between flex-col lg:flex-row gap-5 mb-7">
         <Typography variant="h5" fontWeight="bold">
-          Admin Project List
+          Skill List
         </Typography>
-        <Button onClick={dialog.setTrue}>Create Blog</Button>
+        <Button onClick={dialog.setTrue}>Create Skill</Button>
       </div>
 
       <Paper sx={{ padding: 2, marginBottom: 3 }}>
@@ -102,7 +101,7 @@ const ProectListView = () => {
           alignItems="center"
         >
           <TextField
-            label="Search Projects"
+            label="Search Skills"
             variant="outlined"
             size="small"
             value={searchTerm}
@@ -128,23 +127,23 @@ const ProectListView = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Project Name</TableCell>
-                  <TableCell>Banner</TableCell>
+                  <TableCell>Skill Name</TableCell>
                   <TableCell>Description</TableCell>
-                  <TableCell>Technologies</TableCell>
-                  <TableCell>Live Urls</TableCell>
+                  <TableCell>Logo</TableCell>
+                  <TableCell>Level</TableCell>
+                  <TableCell>Category</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data && data?.data?.projects.length > 0 ? (
-                  data?.data?.projects.map((project) => (
-                    <ProjectRow project={project} key={project._id} />
+                {data && data?.data?.skills.length > 0 ? (
+                  data?.data?.skills.map((skill) => (
+                    <SkillRow skill={skill} key={skill._id} />
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} align="center">
-                      No Projects Found
+                    <TableCell colSpan={6} align="center">
+                      No Skills Found
                     </TableCell>
                   </TableRow>
                 )}
@@ -164,9 +163,9 @@ const ProectListView = () => {
           />
         )}
       </Paper>
-      <CreateProjectDialog dialog={dialog} />
+      <CreateSkillDialog dialog={dialog} />
     </Box>
   );
 };
 
-export default ProectListView;
+export default SkillListView;

@@ -22,15 +22,19 @@ import RHFCheckbox from "@/components/hook-form/rhf-checkbox";
 import { IProject } from "@/types/projects";
 import { commonTechnologies, statusOptions } from "@/constants";
 import RHFSelect from "@/components/hook-form/rhf-select-input";
-import { createProjectValidationSchema } from "@/validations/projects";
+import {
+  createProjectValidationSchema,
+  updateProjectValidationSchema,
+} from "@/validations/projects";
 import { BooleanState } from "@/types/utils";
 import RHFDatePicker from "@/components/hook-form/rhf-date-picker";
-import { IBlog } from "@/types/blog";
-import { useUpdateBlogMutation } from "@/redux/reducers/blog/blogApi";
+import {
+  useCreateProjectMutation,
+  useUpdateProjectMutation,
+} from "@/redux/reducers/project/projectApi";
 import { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { updateBlogValidationSchema } from "@/validations/blog";
+import { ImageAspectRatio } from "@mui/icons-material";
+import Image from "next/image";
 
 const StyledAutocompletePaper = styled("div")(({ theme }) => ({
   border: "1px solid #ccc",
@@ -41,22 +45,16 @@ const StyledAutocompletePaper = styled("div")(({ theme }) => ({
 }));
 
 interface Props {
-  initialValues: IBlog;
   dialog: BooleanState;
 }
 
-export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
-  const [value, setValue] = useState(initialValues.content ?? "");
+export const CreateProjectDialog = ({ dialog }: Props) => {
   const [images, setImages] = useState<File[]>([]);
   const methods = useForm({
-    resolver: zodResolver(updateBlogValidationSchema),
-    defaultValues: {
-      ...initialValues,
-      isPublished: initialValues?.isPublished ?? false,
-    },
+    resolver: zodResolver(createProjectValidationSchema),
   });
 
-  const [updateBlog, { isLoading }] = useUpdateBlogMutation();
+  const [createProject, { isLoading }] = useCreateProjectMutation();
 
   const {
     handleSubmit,
@@ -65,6 +63,11 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
     control,
     formState: { dirtyFields },
   } = methods;
+
+  // Remove the selected image
+  const handleRemoveImage = () => {
+    setImages([]);
+  };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // Select only the first file
@@ -79,36 +82,27 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
     }
   };
 
-  // Remove the selected image
-  const handleRemoveImage = () => {
-    setImages([]); // Clear the images array
-  };
-
   const onSubmit = handleSubmit(async (data) => {
-    const updatePayload: Partial<IBlog> = Object.keys(dirtyFields).reduce(
-      (acc: Partial<IBlog>, field: string) => {
-        if (field in data) {
-          (acc as any)[field] = data[field as keyof IBlog];
-        }
-        return acc;
-      },
-      {} as Partial<IBlog>
-    );
+    if (images.length === 0) {
+      toast.error("Please add minimum 1 image");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+    formData.append("file", images[0]);
 
     try {
-      const response = await updateBlog({
-        id: initialValues._id,
-        updates: updatePayload,
-      }).unwrap();
+      const response = await createProject(formData).unwrap();
       if (response.success) {
         toast.success(response.message);
-        reset();
+        setImages([]);
         dialog.setFalse();
       } else {
         toast.error(response.message);
       }
     } catch (error: any) {
-      toast.error("Failed to update project");
+      toast.error("Failed to create project");
     }
   });
 
@@ -116,10 +110,45 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
     <Dialog open={dialog.value} onClose={dialog.setFalse}>
       <div className="p-5 lg:p-11">
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
-          Update Blog
+          Create Project
         </Typography>
         <FormProvider methods={methods} onSubmit={onSubmit}>
           <div className="flex flex-col gap-5">
+            <div>
+              <label htmlFor="image" className="w-full">
+                <div className="flex items-center justify-between border-2 border-gray-200 px-5 py-3 rounded-md cursor-pointer">
+                  <input
+                    type="file"
+                    id="image"
+                    className="hidden"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                  <h2 className="text-md font-semibold">Add Image</h2>
+                  <ImageAspectRatio />
+                </div>
+              </label>
+            </div>
+            <div className="mt-3 grid grid-cols-5 gap-2">
+              {images.map((image, index) => (
+                <div key={index} className="relative">
+                  <Image
+                    src={URL.createObjectURL(image)}
+                    alt={`Selected image ${index + 1}`}
+                    className="h-16 w-full object-cover rounded-md"
+                    width={200}
+                    height={200}
+                  />
+                  <button
+                    onClick={() => handleRemoveImage()}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
             <RHFTextField name="title" label="Project Title" />
             <RHFTextField
               name="description"
@@ -127,12 +156,31 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
               multiline
               rows={4}
             />
+            <RHFTextField name="liveUrl" label="Live URL" />
+            <RHFTextField
+              name="frontendRepoUrl"
+              label="Frontend Repository URL"
+            />
+            <RHFTextField
+              name="backendRepoUrl"
+              label="Backend Repository URL"
+            />
 
-            <RHFCheckbox name="isPublished" label="Is Published?" />
-            <RHFCheckbox name="isDeleted" label="Is Deleted?" />
+            <RHFCheckbox name="isPublished" label="Published" />
+
+            <div className="flex items-center gap-3">
+              <RHFDatePicker name="startDate" label="Start Date" />
+              <RHFDatePicker name="endDate" label="End Date" />
+            </div>
+
+            <RHFSelect
+              name="status"
+              label="Project Status"
+              options={statusOptions}
+            />
 
             <Controller
-              name="tags"
+              name="technologies"
               control={control}
               render={({ field, formState: { errors } }) => (
                 <Autocomplete
@@ -157,9 +205,9 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Tags"
-                      placeholder="Add tags"
-                      error={Boolean(errors.tags)}
+                      label="Technologies"
+                      placeholder="Add technologies"
+                      error={Boolean(errors.technologies)}
                     />
                   )}
                   PaperComponent={({ children }) => (
@@ -171,15 +219,6 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
               )}
             />
 
-            <div className="h-48 lg:h-64 overflow-auto">
-              <ReactQuill
-                value={value}
-                onChange={setValue}
-                placeholder="What's on your mind?"
-                className="react-quill h-52"
-              />
-            </div>
-
             <div className="flex items-center justify-end gap-3">
               <Button variant="outlined" onClick={dialog.setFalse}>
                 Close
@@ -190,7 +229,7 @@ export const BlogEditDialog = ({ initialValues, dialog }: Props) => {
                 color="primary"
                 loading={isLoading}
               >
-                Update Blog
+                Create Project
               </LoadingButton>
             </div>
           </div>

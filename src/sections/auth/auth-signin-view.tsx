@@ -55,12 +55,6 @@ export default function LoginView() {
         const returnTo = searchParams.get("returnTo");
         if (returnTo) {
           router.push(returnTo);
-        } else if (response?.data?.user?.role === "vendor") {
-          router.push(paths.vendor.root);
-        } else if (response?.data?.user?.role === "customer") {
-          router.push(paths.account.root);
-        } else if (response?.data?.user?.role === "admin") {
-          router.push(paths.admin.root);
         } else {
           router.push(paths.root);
         }
@@ -139,7 +133,7 @@ export default function LoginView() {
       >
         <div className="h-screen pt-24">
           <Link href={paths.root}>
-            <h2 className="text-4xl font-bold text-center mb-5">Bekreta</h2>
+            <h2 className="text-4xl font-bold text-center mb-5">Admin panel</h2>
           </Link>
           <Stack alignItems="center" justifyContent="center">
             <Card

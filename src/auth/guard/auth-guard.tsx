@@ -36,26 +36,6 @@ function Container({ children }: IAuthGuardProps) {
 
   const dispatch = useAppDispatch();
 
-  // const check = useCallback(() => {
-  //   if (!isAuthenticated) {
-  //     if (accessToken) {
-  //       if (!isValidToken(accessToken)) {
-  //         dispatch(logout());
-  //       }
-  //     }
-  //     const searchParams = new URLSearchParams({
-  //       returnTo: window.location.pathname,
-  //     }).toString();
-
-  //     const loginPath = loginPaths.login;
-
-  //     const href = `${loginPath}?${searchParams}`;
-  //     router.replace(href);
-  //   } else {
-  //     setChecked(true);
-  //   }
-  // }, [isAuthenticated, accessToken, router, dispatch]);
-
   const check = useCallback(() => {
     if (accessToken && isValidToken(accessToken)) {
       // Token is valid, user is authenticated

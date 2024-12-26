@@ -66,51 +66,8 @@ export default function SignUpView() {
     }
   }, [errorMessage]);
 
-  const role = watch("role");
-
   const renderForm = (
     <>
-      <Typography
-        variant="body1"
-        sx={{
-          mt: 3,
-        }}
-      >
-        Choose Account Type
-      </Typography>
-      <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-        <Button
-          variant={role === "customer" ? "contained" : "outlined"}
-          onClick={() => {
-            methods.setValue("role", "customer");
-            methods.clearErrors("role");
-          }}
-        >
-          Customer
-        </Button>
-        <Button
-          variant={role === "vendor" ? "contained" : "outlined"}
-          onClick={() => {
-            methods.setValue("role", "vendor");
-            methods.clearErrors("role");
-          }}
-        >
-          Vendor
-        </Button>
-      </Stack>
-
-      {errors.role?.message && (
-        <Typography
-          variant="body2"
-          color="error"
-          sx={{
-            mt: 1,
-          }}
-        >
-          {errors.role.message}
-        </Typography>
-      )}
-
       <Stack
         spacing={3}
         sx={{
@@ -155,7 +112,7 @@ export default function SignUpView() {
       >
         <div className="h-screen pt-24">
           <Link href={paths.root}>
-            <h2 className="text-4xl font-bold text-center mb-5">Bekreta</h2>
+            <h2 className="text-4xl font-bold text-center mb-5">Admin panel</h2>
           </Link>
           <Stack alignItems="center" justifyContent="center">
             <Card

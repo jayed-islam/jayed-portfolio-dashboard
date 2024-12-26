@@ -5,8 +5,7 @@ import "./globals.css";
 import MuiThemeProvider from "@/theme/MuiThemeProvider";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { Toaster } from "react-hot-toast";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
+import LocalizationProvider from "@/theme/localization-provider";
 const notoSansBengali = Noto_Sans_Bengali({
   subsets: ["bengali"],
   weight: ["400", "500", "700"],

@@ -93,7 +93,7 @@ export const UpdateProjectView = ({ initialValues, dialog }: Props) => {
     <Dialog open={dialog.value} onClose={dialog.setFalse}>
       <div className="p-5 lg:p-11">
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
-          Update Project
+          Create Project
         </Typography>
         <FormProvider methods={methods} onSubmit={onSubmit}>
           <div className="flex flex-col gap-5">
@@ -177,7 +177,7 @@ export const UpdateProjectView = ({ initialValues, dialog }: Props) => {
                 color="primary"
                 loading={isLoading}
               >
-                Update Project
+                Create Project
               </LoadingButton>
             </div>
           </div>

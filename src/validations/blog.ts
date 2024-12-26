@@ -11,8 +11,6 @@ export const createBlogValidationSchema = z.object({
   author: z.string().optional(),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  isPublished: z.boolean().optional(),
-  isDeleted: z.boolean().optional(),
 });
 
 export const updateBlogValidationSchema = z.object({

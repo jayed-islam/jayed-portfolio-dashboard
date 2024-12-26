@@ -6,9 +6,12 @@ export const paths = {
   comparisonProduct: "/comparison-product",
   success: "/success",
   project: {
-    root: "/project",
+    root: "/projects",
   },
   blog: {
     root: "/blog",
+  },
+  skill: {
+    root: "/skill",
   },
 };
