@@ -13,6 +13,7 @@ export const createProjectValidationSchema = z.object({
     .array(z.string())
     .min(1, { message: "At least one technology must be provided" })
     .nonempty({ message: "Technologies array cannot be empty" }),
+  infos: z.array(z.string()).optional(),
   liveUrl: z.string().url().optional(),
   frontendRepoUrl: z.string().url().optional(),
   backendRepoUrl: z.string().url().optional(),
@@ -35,6 +36,7 @@ export const updateProjectValidationSchema = z.object({
     .min(5, { message: "Description must be at least 5 characters" })
     .optional(),
   technologies: z.array(z.string()).optional(),
+  infos: z.array(z.string()).optional(),
   liveUrl: z.string().url().optional(),
   frontendRepoUrl: z.string().url().optional(),
   backendRepoUrl: z.string().url().optional(),

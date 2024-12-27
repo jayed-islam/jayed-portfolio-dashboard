@@ -2,12 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import {
   Autocomplete,
+  Box,
   Button,
   Chip,
   Dialog,
+  IconButton,
   styled,
   TextField,
   Typography,
@@ -29,6 +31,7 @@ import {
 import { BooleanState } from "@/types/utils";
 import RHFDatePicker from "@/components/hook-form/rhf-date-picker";
 import { useUpdateProjectMutation } from "@/redux/reducers/project/projectApi";
+import { Delete } from "@mui/icons-material";
 
 const StyledAutocompletePaper = styled("div")(({ theme }) => ({
   border: "1px solid #ccc",
@@ -61,6 +64,15 @@ export const UpdateProjectView = ({ initialValues, dialog }: Props) => {
     control,
     formState: { dirtyFields },
   } = methods;
+
+  const {
+    fields: infos,
+    append: appendInfo,
+    remove: removeInfo,
+  } = useFieldArray({
+    control,
+    name: "infos" as never,
+  });
 
   const onSubmit = handleSubmit(async (data) => {
     const updatePayload: Partial<IProject> = Object.keys(dirtyFields).reduce(
@@ -166,6 +178,34 @@ export const UpdateProjectView = ({ initialValues, dialog }: Props) => {
                 />
               )}
             />
+
+            <Box>
+              <Typography
+                sx={{
+                  mb: 1,
+                }}
+                variant="subtitle2"
+              >
+                Infos
+              </Typography>
+              {infos.map((field, index) => (
+                <Box key={field.id} display="flex" alignItems="center" mb={1}>
+                  <RHFTextField
+                    name={`infos.${index}`}
+                    placeholder="Write info here..."
+                  />
+                  <IconButton
+                    onClick={() => removeInfo(index)}
+                    disabled={infos.length === 1}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Box>
+              ))}
+              <Button variant="outlined" onClick={() => appendInfo("")}>
+                Add Info
+              </Button>
+            </Box>
 
             <div className="flex items-center justify-end gap-3">
               <Button variant="outlined" onClick={dialog.setFalse}>
