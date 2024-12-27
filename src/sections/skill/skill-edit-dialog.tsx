@@ -40,6 +40,7 @@ import {
   updateSkillValidationSchema,
 } from "@/validations/skill";
 import { ISkill } from "@/types/skill";
+import { useUpdateSkillMutation } from "@/redux/reducers/skill/skillApi";
 
 interface Props {
   dialog: BooleanState;
@@ -53,7 +54,7 @@ export const EditSkillDialog = ({ dialog, intValues }: Props) => {
     defaultValues: intValues,
   });
 
-  const [createProject, { isLoading }] = useCreateProjectMutation();
+  const [updateSkill, { isLoading }] = useUpdateSkillMutation();
 
   const {
     handleSubmit,
@@ -82,17 +83,20 @@ export const EditSkillDialog = ({ dialog, intValues }: Props) => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    if (images.length === 0) {
-      toast.error("Please add minimum 1 image");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(data));
-    formData.append("file", images[0]);
-
+    const updatePayload: Partial<ISkill> = Object.keys(dirtyFields).reduce(
+      (acc: Partial<ISkill>, field: string) => {
+        if (field in data) {
+          (acc as any)[field] = data[field as keyof ISkill];
+        }
+        return acc;
+      },
+      {} as Partial<ISkill>
+    );
     try {
-      const response = await createProject(formData).unwrap();
+      const response = await updateSkill({
+        id: intValues._id,
+        updates: updatePayload,
+      }).unwrap();
       if (response.success) {
         toast.success(response.message);
         setImages([]);

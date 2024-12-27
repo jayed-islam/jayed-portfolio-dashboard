@@ -21,6 +21,9 @@ export const createExperienceValidationSchema = z.object({
     .string({ required_error: "companyLogo is required" })
     .min(1, { message: "companyLogo must not be empty" })
     .trim(),
+  activities: z
+    .array(z.string({ required_error: "Required" }))
+    .min(1, { message: "activities must not be empty" }),
   startDate: z.date({ required_error: "Start Date is required" }),
   endDate: z.date().optional(),
   location: z
@@ -46,6 +49,10 @@ export const updateExperienceValidationSchema = z.object({
   endDate: z.string().optional(),
   updatedBy: z.string().optional(),
   isDeleted: z.boolean().optional(),
+  activities: z
+    .array(z.string({ required_error: "Required" }))
+    .min(1, { message: "activities must not be empty" })
+    .optional(),
   companyLogo: z
     .string({ required_error: "companyLogo is required" })
     .min(1, { message: "companyLogo must not be empty" })

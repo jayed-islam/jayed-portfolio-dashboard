@@ -88,7 +88,7 @@ const ProectListView = () => {
         <Typography variant="h5" fontWeight="bold">
           Admin Project List
         </Typography>
-        <Button onClick={dialog.setTrue}>Create Blog</Button>
+        <Button onClick={dialog.setTrue}>Create Project</Button>
       </div>
 
       <Paper sx={{ padding: 2, marginBottom: 3 }}>

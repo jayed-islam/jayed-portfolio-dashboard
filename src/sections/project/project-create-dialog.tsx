@@ -2,12 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import {
   Autocomplete,
+  Box,
   Button,
   Chip,
   Dialog,
+  IconButton,
   styled,
   TextField,
   Typography,
@@ -33,7 +35,7 @@ import {
   useUpdateProjectMutation,
 } from "@/redux/reducers/project/projectApi";
 import { useState } from "react";
-import { ImageAspectRatio } from "@mui/icons-material";
+import { Delete, ImageAspectRatio } from "@mui/icons-material";
 import Image from "next/image";
 
 const StyledAutocompletePaper = styled("div")(({ theme }) => ({
@@ -63,6 +65,15 @@ export const CreateProjectDialog = ({ dialog }: Props) => {
     control,
     formState: { dirtyFields },
   } = methods;
+
+  const {
+    fields: infos,
+    append: appendInfo,
+    remove: removeInfo,
+  } = useFieldArray({
+    control,
+    name: "infos",
+  });
 
   // Remove the selected image
   const handleRemoveImage = () => {
@@ -218,6 +229,34 @@ export const CreateProjectDialog = ({ dialog }: Props) => {
                 />
               )}
             />
+
+            <Box>
+              <Typography
+                sx={{
+                  mb: 1,
+                }}
+                variant="subtitle2"
+              >
+                Infos
+              </Typography>
+              {infos.map((field, index) => (
+                <Box key={field.id} display="flex" alignItems="center" mb={1}>
+                  <RHFTextField
+                    name={`infos.${index}`}
+                    placeholder="Write info here..."
+                  />
+                  <IconButton
+                    onClick={() => removeInfo(index)}
+                    disabled={infos.length === 1}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Box>
+              ))}
+              <Button variant="outlined" onClick={() => appendInfo("")}>
+                Add Info
+              </Button>
+            </Box>
 
             <div className="flex items-center justify-end gap-3">
               <Button variant="outlined" onClick={dialog.setFalse}>

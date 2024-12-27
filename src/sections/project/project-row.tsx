@@ -30,11 +30,12 @@ const ProjectRow = ({ project }: Props) => {
           </div>
         </TableCell>
         <TableCell>
-          <h2 className="text-sm font-semibold text-yellow-600 whitespace-nowrap">
-            {project?.isPublished ? "Published" : "Diactived"}
+          <h2 className="line-clamp-2 overflow-ellipsis">
+            {project.description}
           </h2>
         </TableCell>
-        <TableCell>{project?.description || "No description"}</TableCell>
+
+        <TableCell>{project.technologies.join(", ")}</TableCell>
         <TableCell>
           <div className="flex flex-col gap-2">
             {project.liveUrl && (

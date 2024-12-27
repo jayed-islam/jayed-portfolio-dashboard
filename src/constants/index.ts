@@ -1,8 +1,8 @@
 export const commonTechnologies = [
   { label: "React", value: "react" },
-  { label: "Next.js", value: "nextjs" },
+  { label: "Nextjs", value: "nextjs" },
   { label: "TypeScript", value: "typescript" },
-  { label: "Node.js", value: "nodejs" },
+  { label: "Nodejs", value: "nodejs" },
   { label: "Express", value: "express" },
   { label: "Mongoose", value: "mongoose" },
   { label: "Material-UI", value: "material-ui" },
